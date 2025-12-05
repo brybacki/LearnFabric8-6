@@ -51,8 +51,18 @@ public class InformerTest
                 public void onUpdate(Pod pod, Pod t1)
                 {
                     if (pod.getMetadata().getDeletionTimestamp() != null) {
-                        System.out.println("Pod " + pod.getMetadata().getName() + " is terminating");
+                        System.out.println("Pod " + pod.getMetadata().getName() + " is terminating - DeletionTimestamp: " + pod.getMetadata().getDeletionTimestamp());
                     }
+
+                    // Display pod conditions
+                    if (pod.getStatus() != null && pod.getStatus().getConditions() != null) {
+                        System.out.println("Pod " + pod.getMetadata().getName() + " conditions:");
+                        pod.getStatus().getConditions().forEach(condition -> {
+                            System.out.println("  - " + condition.getType() + ": " + condition.getStatus() +
+                                             " (Reason: " + condition.getReason() + ", Message: " + condition.getMessage() + ")");
+                        });
+                    }
+
                     info("UPDATE {}/{}", pod.getMetadata().getNamespace(),
                             pod.getMetadata().getName());
                 }
@@ -61,8 +71,18 @@ public class InformerTest
                 public void onDelete(Pod pod, boolean b)
                 {
                     if (pod.getMetadata().getDeletionTimestamp() != null) {
-                        System.out.println("Pod " + pod.getMetadata().getName() + " is terminating");
+                        System.out.println("Pod " + pod.getMetadata().getName() + " is terminating - DeletionTimestamp: " + pod.getMetadata().getDeletionTimestamp());
                     }
+
+                    // Display pod conditions
+                    if (pod.getStatus() != null && pod.getStatus().getConditions() != null) {
+                        System.out.println("Pod " + pod.getMetadata().getName() + " conditions:");
+                        pod.getStatus().getConditions().forEach(condition -> {
+                            System.out.println("  - " + condition.getType() + ": " + condition.getStatus() +
+                                             " (Reason: " + condition.getReason() + ", Message: " + condition.getMessage() + ")");
+                        });
+                    }
+
                     info("DELETE {}/{}", pod.getMetadata().getNamespace(),
                             pod.getMetadata().getName());
                 }
